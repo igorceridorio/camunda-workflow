@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "sCJYPYxft4nwZ4VELxjj+EHxgPPJ9wPvSOybrsI0zcup+yrzqStUoHGeiP2YzXVf5jIML8MfFrK4t9jB+EsOkw==",
+  "success": true,
+  "projectFilePath": "D:\\Work\\Projects\\digital-banking\\camunda-workflow\\Camunda-Workflow\\Camunda-Workflow\\Camunda-Workflow.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\igorc\\.nuget\\packages\\camunda.api.client\\2.5.0\\camunda.api.client.2.5.0.nupkg.sha512",
+    "C:\\Users\\igorc\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
+    "C:\\Users\\igorc\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
+    "C:\\Users\\igorc\\.nuget\\packages\\refit\\4.6.16\\refit.4.6.16.nupkg.sha512"
+  ],
+  "logs": []
+}
