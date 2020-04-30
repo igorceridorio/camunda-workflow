@@ -1,4 +1,8 @@
 Camunda-Workflow/.vs/
 Camunda-Workflow/Camunda-Workflow/bin
-Elsa-Workflow/Camunda-Workflow/obj
+Camunda-Workflow/Camunda-Workflow/obj
 Camunda-Workflow/Camunda-Workflow/log-file.txt
+CadastrarUsuarioWorkerService/.vs/
+CadastrarUsuarioWorkerService/CadastrarUsuarioWorkerService/bin
+CadastrarUsuarioWorkerService/CadastrarUsuarioWorkerService/obj
+CadastrarUsuarioWorkerService/CadastrarUsuarioWorkerService/log-file.txt
