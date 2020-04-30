@@ -1,25 +1,27 @@
-using Camunda.Api.Client;
+﻿using Camunda.Api.Client;
 using Camunda.Api.Client.ExternalTask;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UserRegistrationWorkerService.Configurations;
 
-namespace UserRegistrationWorkerService
+namespace UserRegistrationWorkerService.Workers
 {
-    public class PersistUserWorker : BackgroundService
+    public class SendEmailWorker : BackgroundService
     {
-        private readonly ILogger<PersistUserWorker> _logger;
+        private readonly ILogger<SendEmailWorker> _logger;
         private readonly ServiceConfiguration _serviceConfiguration;
-        public static string WORKER_ID = "PersistUserWorker";
+        private static string WORKER_ID = "SendEmailWorker";
 
-        public PersistUserWorker(
-            ILogger<PersistUserWorker> logger, 
+        public SendEmailWorker(
+            ILogger<SendEmailWorker> logger,
             IConfiguration configuration)
         {
             _logger = logger;
@@ -44,40 +46,32 @@ namespace UserRegistrationWorkerService
                 {
                     MaxTasks = 10,
                     WorkerId = WORKER_ID,
-                    Topics = new List<FetchExternalTaskTopic>() { new FetchExternalTaskTopic("persist_user", 2000) }
+                    Topics = new List<FetchExternalTaskTopic>() { new FetchExternalTaskTopic("send_email", 2000) }
                 };
 
-                List<LockedExternalTask> lockedExternalTasks =  await camunda.ExternalTasks.FetchAndLock(fetchExternalTasks);
+                List<LockedExternalTask> lockedExternalTasks = await camunda.ExternalTasks.FetchAndLock(fetchExternalTasks);
 
                 // Processing the tasks
-                foreach (LockedExternalTask lockedExternalTask in lockedExternalTasks) {
+                foreach (LockedExternalTask lockedExternalTask in lockedExternalTasks)
+                {
 
                     // Loading all variables from this task
                     Dictionary<string, VariableValue> taskVariables = lockedExternalTask.Variables;
 
-                    var name = taskVariables["name"];
-                    var password = taskVariables["password"];
-                    var userId = new Random().Next(1, 100);
+                    var userId = taskVariables["user_id"];
 
                     // Process the task as you wish
-                    _logger.LogInformation($"Persisting on DB. New user: {name}, password: {password}. Generated ID: {userId}");
-
-                    // Setting output variables
-                    Dictionary<string, VariableValue> outputVariables = new Dictionary<string, VariableValue>
-                    {
-                        { "user_id", VariableValue.FromObject(userId) }
-                    };
+                    _logger.LogInformation($"Sending email to user: {userId}");
 
                     // Completes task
                     var completeExternalTask = new CompleteExternalTask()
                     {
-                        Variables = outputVariables,
-                        WorkerId = WORKER_ID,
+                        WorkerId = WORKER_ID
                     };
 
                     await camunda.ExternalTasks[lockedExternalTask.Id].Complete(completeExternalTask);
                 }
-                
+
                 await Task.Delay(_serviceConfiguration.Interval, stoppingToken);
             }
         }

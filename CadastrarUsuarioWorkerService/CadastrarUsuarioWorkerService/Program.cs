@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using UserRegistrationWorkerService.Workers;
 
 namespace UserRegistrationWorkerService
 {
@@ -20,6 +17,7 @@ namespace UserRegistrationWorkerService
                 {
                     // Configure the workers that will be responsible for processing the income tasks
                     services.AddHostedService<PersistUserWorker>();
+                    services.AddHostedService<SendEmailWorker>();
                 });
     }
 }
