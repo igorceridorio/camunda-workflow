@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0ujaxn7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.3">
-  <bpmn:process id="cadastrar_usuario" name="Cadastrar Usuário" isExecutable="true">
-    <bpmn:startEvent id="StartEvent_1" name="Cadastro do usuário">
+  <bpmn:process id="user_registration" name="User Registration" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="User registration">
       <bpmn:outgoing>Flow_0se6muu</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:serviceTask id="Activity_01lpjtw" name="Salvar no BD" camunda:type="external" camunda:topic="salvar-usuario-banco">
-      <bpmn:incoming>Flow_0se6muu</bpmn:incoming>
-      <bpmn:outgoing>Flow_1e5zwpx</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_0se6muu" sourceRef="StartEvent_1" targetRef="Activity_01lpjtw" />
-    <bpmn:serviceTask id="Activity_0x0z8gn" name="Enviar email" camunda:type="external" camunda:topic="enviar-email">
+    <bpmn:serviceTask id="Activity_0x0z8gn" name="Send Email" camunda:type="external" camunda:topic="send_email">
       <bpmn:incoming>Flow_1e5zwpx</bpmn:incoming>
       <bpmn:outgoing>Flow_0cim2pf</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_1e5zwpx" sourceRef="Activity_01lpjtw" targetRef="Activity_0x0z8gn" />
-    <bpmn:endEvent id="Event_0qs8yu8" name="Usuário cadastrado">
+    <bpmn:endEvent id="Event_0qs8yu8" name="User registered">
       <bpmn:incoming>Flow_0cim2pf</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0cim2pf" sourceRef="Activity_0x0z8gn" targetRef="Event_0qs8yu8" />
+    <bpmn:serviceTask id="Activity_01lpjtw" name="Persist on DB" camunda:type="external" camunda:topic="persist_user">
+      <bpmn:incoming>Flow_0se6muu</bpmn:incoming>
+      <bpmn:outgoing>Flow_1e5zwpx</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="cadastrar_usuario">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="user_registration">
       <bpmndi:BPMNEdge id="Flow_0se6muu_di" bpmnElement="Flow_0se6muu">
         <di:waypoint x="208" y="120" />
         <di:waypoint x="290" y="120" />
@@ -36,11 +36,8 @@
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="172" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="160" y="145" width="60" height="27" />
+          <dc:Bounds x="150" y="145" width="81" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1dyfujp_di" bpmnElement="Activity_01lpjtw">
-        <dc:Bounds x="290" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0m6y7xi_di" bpmnElement="Activity_0x0z8gn">
         <dc:Bounds x="450" y="80" width="100" height="80" />
@@ -48,8 +45,11 @@
       <bpmndi:BPMNShape id="Event_0qs8yu8_di" bpmnElement="Event_0qs8yu8">
         <dc:Bounds x="612" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="603" y="145" width="55" height="27" />
+          <dc:Bounds x="593" y="145" width="76" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xheg8u_di" bpmnElement="Activity_01lpjtw">
+        <dc:Bounds x="290" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
