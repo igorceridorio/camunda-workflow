@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>dotnet-CadastrarUsuarioWorkerService-055C9109-63A0-4EF9-8F18-9DB72D260EAD</UserSecretsId>
+    <UserSecretsId>dotnet-UserRegistrationWorkerService-055C9109-63A0-4EF9-8F18-9DB72D260EAD</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
