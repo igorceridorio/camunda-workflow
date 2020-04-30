@@ -17,6 +17,7 @@ namespace UserRegistrationWorkerService
     {
         private readonly ILogger<PersistUserWorker> _logger;
         private readonly ServiceConfiguration _serviceConfiguration;
+        public static string WORKER_ID = "PersistUserWorker";
 
         public PersistUserWorker(
             ILogger<PersistUserWorker> logger, 
@@ -39,37 +40,42 @@ namespace UserRegistrationWorkerService
                 // Starting camunda client
                 CamundaClient camunda = CamundaClient.Create("http://localhost:8080/engine-rest");
 
-                // Registering worker to the desired topic
-                var persistUserTaskQuery = new ExternalTaskQuery()
+                // Fetching available tasks for that topic
+                var fetchExternalTasks = new FetchExternalTasks()
                 {
-                    Active = true,
-                    TopicName = "persist_user"
+                    MaxTasks = 10,
+                    WorkerId = WORKER_ID,
+                    Topics = new List<FetchExternalTaskTopic>() { new FetchExternalTaskTopic("persist_user", 2000) }
                 };
 
-                // Fetching available tasks for that topic
-                List<ExternalTaskInfo> persistUserTasks = await camunda.ExternalTasks.Query(persistUserTaskQuery).List();
+                List<LockedExternalTask> lockedExternalTasks =  await camunda.ExternalTasks.FetchAndLock(fetchExternalTasks);
 
                 // Processing the tasks
-                foreach (ExternalTaskInfo persistUserTask in persistUserTasks) {
+                foreach (LockedExternalTask lockedExternalTask in lockedExternalTasks) {
 
                     // Loading all variables from this task
-                    var executionId = persistUserTask.ExecutionId;
-                    //var name = await camunda.Executions[executionId].LocalVariables.Get("name");
-                    //var password = await camunda.Executions[executionId].LocalVariables.Get("password");
+                    Dictionary<string, VariableValue> taskVariables = lockedExternalTask.Variables;
 
-                    Dictionary<string, VariableValue> allVariables = await camunda.Executions[executionId]
-                        .LocalVariables.GetAll();
+                    var name = taskVariables["name"];
+                    var password = taskVariables["password"];
 
                     // Process the task as you wish
-                    //_logger.LogInformation($"Persisting on DB. New user: {name}, password: {password}");
+                    _logger.LogInformation($"Persisting on DB. New user: {name}, password: {password}");
 
                     // Setting output variables
-                    await camunda.Executions[executionId].LocalVariables.Set("user_id", VariableValue.FromObject(new Random().Next(1, 100)));
+                    Dictionary<string, VariableValue> outputVariables = new Dictionary<string, VariableValue>
+                    {
+                        { "user_id", VariableValue.FromObject(VariableValue.FromObject(new Random().Next(1, 100))) }
+                    };
 
-                    // Completing task
-                    // await camunda.Executions[executionId].
-                    
+                    // Completes task
+                    var completeExternalTask = new CompleteExternalTask()
+                    {
+                        LocalVariables = outputVariables,
+                        WorkerId = WORKER_ID,
+                    };
 
+                    await camunda.ExternalTasks[lockedExternalTask.Id].Complete(completeExternalTask);
                 }
                 
                 await Task.Delay(_serviceConfiguration.Interval, stoppingToken);
