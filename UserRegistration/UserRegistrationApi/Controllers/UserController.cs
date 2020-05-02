@@ -1,21 +1,19 @@
-﻿using System;
+﻿using Camunda.Api.Client;
+using Camunda.Api.Client.ProcessDefinition;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace UserRegistrationApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class UserController : ControllerBase
+    [Route("users")]
+    public class UserController : Controller
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<UserController> _logger;
 
         public UserController(ILogger<UserController> logger)
@@ -23,17 +21,33 @@ namespace UserRegistrationApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public IEnumerable<User> Get()
+        [Route("register")]
+        [HttpPost]
+        public async Task<IActionResult> UserRegistration(RegistrationModel request)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new User
+            _logger.LogInformation("Registering new user...");
+            _logger.LogInformation($"name: {request.Name}");
+
+            try
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                // Starting camunda client
+                CamundaClient camunda = CamundaClient.Create("http://localhost:8080/engine-rest");
+
+                // New process defintion
+                StartProcessInstance newProcessInstance = new StartProcessInstance();
+                newProcessInstance.SetVariable("name", VariableValue.FromObject(request.Name));
+                newProcessInstance.SetVariable("password", VariableValue.FromObject(request.Password));
+
+                // Sending process to camunda
+                await camunda.ProcessDefinitions.ByKey("user_registration").StartProcessInstance(newProcessInstance);
+
+                return StatusCode(StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error calling user registration for user {request.Name}");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }
