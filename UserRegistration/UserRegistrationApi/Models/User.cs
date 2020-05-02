@@ -2,7 +2,7 @@ using System;
 
 namespace UserRegistrationApi
 {
-    public class WeatherForecast
+    public class User
     {
         public DateTime Date { get; set; }
 

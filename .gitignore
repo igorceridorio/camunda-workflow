@@ -2,7 +2,10 @@ Camunda-Workflow/.vs/
 Camunda-Workflow/Camunda-Workflow/bin
 Camunda-Workflow/Camunda-Workflow/obj
 Camunda-Workflow/Camunda-Workflow/log-file.txt
-UserRegistrationWorkerService/.vs/
-UserRegistrationWorkerService/UserRegistrationWorkerService/bin
-UserRegistrationWorkerService/UserRegistrationWorkerService/obj
-UserRegistrationWorkerService/UserRegistrationWorkerService/log-file.txt
+UserRegistration/.vs/
+UserRegistration/UserRegistrationWorkerService/bin
+UserRegistration/UserRegistrationWorkerService/obj
+UserRegistration/UserRegistrationWorkerService/log-file.txt
+UserRegistration/UserRegistrationApi/bin
+UserRegistration/UserRegistrationApi/obj
+UserRegistration/UserRegistrationApi/log-file.txt
