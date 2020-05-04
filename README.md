@@ -4,7 +4,7 @@ Workflow driven test application using Camunda BPM and .NET Core 3.1
 
 ------------
 
-This sample application was built with the sole purpose of exercising a [Camunda BPM Process](https://camunda.com/ "Camunda BPM Process") upon a API call inside a .NET Core 3.1 project.
+This sample application was built with the sole purpose of exercising a [Camunda BPM Process](https://camunda.com/ "Camunda BPM Process") upon an API call inside a .NET Core 3.1 project.
 
 This solution has two projects:
 
