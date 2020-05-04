@@ -19,7 +19,7 @@ The workflow definition can be found inside the folder `/Workflows`.
 
 This project uses the C# client Camunda library [Camunda.Api.Client](https://github.com/jlucansky/Camunda.Api.Client "Camunda.Api.Client").
 
-###Running the solution:
+### Running the solution:
 
 1. Start Camunda Server.
 2. Deploy the workflow to http://localhost:8080/engine-rest (if you wish feel free to change this address but remember to also change the connection path inside the projects).
