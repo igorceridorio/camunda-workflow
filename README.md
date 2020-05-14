@@ -11,7 +11,7 @@ This solution has two projects:
 - **UserRegistrationApi**: Contains a POST endpoint that captures de user data and starts the Camunda Process.
 - **UserRegistrationWorkerService**: Contains the workers implementation responsbile for executing the external tasks defined in the workflow.
 
-This is the wrkflow definition, built with **Camunda Modeler**:
+This is the workflow definition, built with **Camunda Modeler**:
 
 ![Image description](Workflows/user_registration.png)
 
